@@ -70,7 +70,10 @@ ASCENDC_EXTERN_C ge::graphStatus TilingChunkBwdDqkwg(gert::TilingContext* contex
     }
 
 
-
+    if (context->GetOptionalInputTensor(10) != nullptr || context->GetOptionalInputTensor(11) != nullptr) {
+        std::cout << "w and g_gamma should be set at nullptr." << std::endl;
+        return ge::GRAPH_FAILED;
+    }
 
     auto cuSeqlensTensor = context->GetOptionalInputTensor(8);
     int64_t numChunks = CeilDiv(T, BT);  // = 32

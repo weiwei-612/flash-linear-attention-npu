@@ -28,6 +28,8 @@ const std::array<const aclTensor *, 4> ChunkBwdDqkwg(
     const aclTensor *dv,
     const aclIntArray *cuSeqlensOptional,
     const aclIntArray *chunkIndicesOptional,
+    const aclTensor *w,
+    const aclTensor *gGamma,
     float scale,
     int64_t chunkSize,
     const aclTensor *dqOut,
@@ -37,7 +39,7 @@ const std::array<const aclTensor *, 4> ChunkBwdDqkwg(
     aclOpExecutor *executor)
 {
 // std::cout << "2222222222--2222200\n";
-    L0_DFX(ChunkBwdDqkwg, q, k, v, g, h, dox, dh, dv, cuSeqlensOptional, chunkIndicesOptional, scale, chunkSize, dqOut, dkOut, dwOut, dgOut);
+    L0_DFX(ChunkBwdDqkwg, q, k, v, g, h, dox, dh, dv, cuSeqlensOptional, chunkIndicesOptional, w, gGamma, scale, chunkSize, dqOut, dkOut, dwOut, dgOut);
 // std::cout << "2222222222--2222200111\n";
     
     const aclTensor *actualCuSeqQLen = nullptr;
@@ -68,9 +70,9 @@ const std::array<const aclTensor *, 4> ChunkBwdDqkwg(
     }
 
     auto ret = ADD_TO_LAUNCHER_LIST_AICORE(ChunkBwdDqkwg,
-        OP_INPUT(q, k, v, g, h, dox, dh, dv, actualCuSeqQLen, actualChunkIndices),
+        OP_INPUT(q, k, v, g, h, dox, dh, dv, actualCuSeqQLen, actualChunkIndices, w, gGamma),
         OP_OUTPUT(dqOut, dkOut, dwOut, dgOut),
-        OP_ATTR(scale, chunkSize));
+        OP_ATTR(scale, chunkSize, 0));
 
     if (ret != ACLNN_SUCCESS) {
         OP_LOGE(ACLNN_ERR_PARAM_INVALID, "ADD_TO_LAUNCHER_LIST_AICORE failed.");
