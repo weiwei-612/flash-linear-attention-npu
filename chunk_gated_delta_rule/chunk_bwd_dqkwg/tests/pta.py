@@ -1,9 +1,12 @@
 from chunk_bwd_dqkwg_cpu import *
+import torch
+import torch_npu
+import aclnn_extension
 # -------------------------------------------------------------------------
 # 使用示例 / 验证
 # -------------------------------------------------------------------------
 if __name__ == "__main__":
-    RANDOM_DATA = False
+    RANDOM_DATA = True
     case_number = 22
     if len(sys.argv) > 1:
         case_name = sys.argv[1][5:]  # "case_" 长度为5
@@ -42,7 +45,7 @@ if __name__ == "__main__":
         [2,4,512,64,torch.bfloat16,torch.float32,0.088,None],  #23 [0,16,128] [0,16,135,512]
         [1,32,32768,64,torch.bfloat16,torch.float32,0.088,None],  #24 [0,16,128]
     ]
-    device_id = 5
+    device_id = 4
     
 
     dtype = torch.float16
@@ -175,8 +178,10 @@ if __name__ == "__main__":
     # cu_seqlens_npu = cu_seqlens if cu_seqlens is not None else None
     chunk_indices_npu = chunk_indices if cu_seqlens is not None else None
     down_tri = q_npu
-    dq_npu, dk_npu, dw_npu, dg_npu = torch_npu.npu_chunk_bwd_dqkwg(
-        q_npu, k_npu, v_npu, g_npu, h_npu, do_npu, dh_npu, dv_npu, cu_seqlens, chunk_indices_npu, scale, chunk_size
+    dq_npu, dk_npu, dw_npu, dg_npu = torch.ops.npu.npu_chunk_bwd_dqkwg(
+        q_npu, k_npu, v_npu, g_npu, h_npu, do_npu, dh_npu, dv_npu, chunk_size, cu_seqlens=cu_seqlens, chunk_indices=chunk_indices_npu, w=None, g_gamma=None, scale=scale, transpose_state_layout=None
+       #q_npu, k_npu, v_npu, g_npu, h_npu, do_npu, dh_npu, dv_npu, chunk_size, cu_seqlens=cu_seqlens, w=None, g_gamma=None, chunk_indices=chunk_indices_npu, scale=scale, transpose_state_layout=None
+
     )
     dq_npu = dq_npu.cpu()
     dk_npu = dk_npu.cpu()

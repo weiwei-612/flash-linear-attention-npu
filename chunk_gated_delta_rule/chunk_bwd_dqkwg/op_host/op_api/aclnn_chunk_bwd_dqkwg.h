@@ -46,6 +46,8 @@ aclnnStatus aclnnChunkBwdDqkwgGetWorkspaceSize(
     const aclTensor *dv,
     const aclIntArray *cuSeqlensOptional,
     const aclIntArray *chunkIndicesOptional,
+    const aclTensor *w,
+    const aclTensor *gGamma,
     float scale,
     int64_t chunkSize,
     const aclTensor *dqOut,

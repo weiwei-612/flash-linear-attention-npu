@@ -612,7 +612,7 @@ if __name__ == "__main__":
 
     print("qqqqqqqq")
     dq_npu, dk_npu, dw_npu, dg_npu = torch.ops.npu.npu_chunk_bwd_dqkwg(
-        q_npu, k_npu, v_npu, g_npu, h_npu, do_npu, dh_npu, dv_npu, chunk_size, cu_seqlens=cu_seqlens, chunk_indices=chunk_indices_npu, scale=scale
+        q_npu, k_npu, v_npu, g_npu, h_npu, do_npu, dh_npu, dv_npu, chunk_size, cu_seqlens=cu_seqlens, w=None, g_gamma=None, chunk_indices=chunk_indices_npu, scale=scale, transpose_state_layout=None
     )
     print("custom_ops.npu_chunk_bwd_dqkwg done")
     dq_npu = dq_npu.cpu()
