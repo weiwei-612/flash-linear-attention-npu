@@ -223,11 +223,11 @@ at::Tensor npu_chunk_fwd_o(
         final_state_out = at::Tensor();
     }
 
-    // 调用ACLNN算子
+    // 调用ACLNN算子（两阶段调用：先获取工作空间大小，再执行）
     EXEC_NPU_CMD_EXT(
         aclnnChunkGatedDeltaRuleFwdH,
         k, w, u, g,
-        initial_state_, cu_seqlens, chunk_indices, output_final_state_, chunk_size,
+        initial_state_, cu_seqlens, chunk_indices, output_final_state_, chunk_size_,
         h_out, v_new_out, final_state_out
     );
     return std::make_tuple(h_out, v_new_out, final_state_out);
