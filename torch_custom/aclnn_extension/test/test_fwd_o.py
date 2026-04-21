@@ -304,11 +304,13 @@ if __name__ == "__main__":
         k,
         v,
         h,
-        g,
         gdn_fwd_o_input.scale,
+        g=g,
+        g_gamma=None,
         cu_seqlens=input_tensor.cu_seqlens,
         chunk_indices=input_tensor.chunk_offsets,
-        chunk_size=gdn_fwd_o_input.chunk_size
+        chunk_size=gdn_fwd_o_input.chunk_size,
+        transpose_state_layout=False,
     )
 
     print("step 7: after custom op")
